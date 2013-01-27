@@ -9,21 +9,37 @@
 #import "CardGameViewController.h"
 
 @interface CardGameViewController ()
-
+@property (weak, nonatomic) IBOutlet UILabel *flipsLabel;
+@property (nonatomic) int flipCount;
+@property (strong, nonatomic) PlayingCardDeck *playingCardDeck;
 @end
 
 @implementation CardGameViewController
 
-- (void)viewDidLoad
+- (PlayingCardDeck *)playingCardDeck
 {
-    [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+    if (!_playingCardDeck) _playingCardDeck = [[PlayingCardDeck alloc] init];
+    return _playingCardDeck;
 }
 
-- (void)didReceiveMemoryWarning
+- (void)setFlipCount:(int)flipCount
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    _flipCount = flipCount;
+    self.flipsLabel.text = [NSString stringWithFormat:@"Flips: %d", self.flipCount];
+}
+
+- (IBAction)flipCard:(UIButton *)sender
+{
+    sender.selected = !sender.isSelected;
+    if (sender.isSelected) {
+        Card *drawnCard = self.playingCardDeck.drawRandomCard;
+        if (drawnCard) {
+            [sender setTitle:drawnCard.contents forState:UIControlStateSelected];
+            self.flipCount++;
+        } else {
+            [sender setTitle:@"" forState:UIControlStateSelected];
+        }
+    }
 }
 
 @end
