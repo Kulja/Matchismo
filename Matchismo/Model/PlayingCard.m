@@ -29,6 +29,28 @@
     return [[[PlayingCard rankStrings] objectAtIndex:self.rank] stringByAppendingString:self.suit];
 }
 
+// all cards need to match a suit or a rank to get any points
+- (int)match:(NSArray *)otherCards
+{
+    int score = 0;
+
+    for (PlayingCard *cardSuitCheck in otherCards) {
+        if ([cardSuitCheck.suit isEqualToString:self.suit]) {
+            score += 1;
+        } else {
+            for (PlayingCard *cardRankCheck in otherCards) {
+                if (cardRankCheck.rank == self.rank) {
+                    score += 4;
+                } else {
+                    return 0;
+                }
+            }
+        }
+    }
+    
+    return score;
+}
+
 + (NSArray *)validSuits
 {
     return [NSArray arrayWithObjects:@"♣", @"♥", @"♦", @"♠", nil];
