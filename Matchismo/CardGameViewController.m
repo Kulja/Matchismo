@@ -48,14 +48,7 @@
     _flipCount = flipCount;
     self.flipsLabel.text = [NSString stringWithFormat:@"Flips: %d", self.flipCount];
 }
-/*
-- (void)setGameChangerSC:(UISegmentedControl *)gameChangerSC
-{
-    _gameChangerSC = gameChangerSC;
-    // setting game to 2-card match game by default
-    self.game.numberOfMatchesRequired = self.gameChangerSC.selectedSegmentIndex + 1;
-}
-*/
+
 - (void)updateUI
 {
     for (UIButton *cardButton in self.cardButtons) {
