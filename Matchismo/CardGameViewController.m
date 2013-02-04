@@ -24,8 +24,11 @@
 
 - (CardMatchingGame *)game
 {
-    if (!_game) _game = [[CardMatchingGame alloc] initWithCardCount:[self.cardButtons count]
-                                                         usingDeck:[[PlayingCardDeck alloc] init]];
+    if (!_game) {
+        _game = [[CardMatchingGame alloc] initWithCardCount:[self.cardButtons count]
+                                                  usingDeck:[[PlayingCardDeck alloc] init]];
+        self.game.numberOfMatchesRequired = self.gameChangerSC.selectedSegmentIndex + 1;
+    }
     return _game;
 }
 
@@ -34,8 +37,8 @@
     _cardButtons = cardButtons;
     for (UIButton *cardButton in self.cardButtons) {
         [cardButton setBackgroundImage:[UIImage imageNamed:@"orangeCard.png"] forState:UIControlStateNormal];
-        [cardButton setBackgroundImage:[UIImage new] forState:UIControlStateSelected];
-        [cardButton setBackgroundImage:[UIImage new] forState:UIControlStateSelected|UIControlStateDisabled];
+        [cardButton setBackgroundImage:[UIImage imageNamed:@"whiteCard.png"] forState:UIControlStateSelected];
+        [cardButton setBackgroundImage:[UIImage imageNamed:@"whiteCard.png"] forState:UIControlStateSelected|UIControlStateDisabled];
     }
     [self updateUI];
 }
@@ -45,14 +48,14 @@
     _flipCount = flipCount;
     self.flipsLabel.text = [NSString stringWithFormat:@"Flips: %d", self.flipCount];
 }
-
+/*
 - (void)setGameChangerSC:(UISegmentedControl *)gameChangerSC
 {
     _gameChangerSC = gameChangerSC;
     // setting game to 2-card match game by default
     self.game.numberOfMatchesRequired = self.gameChangerSC.selectedSegmentIndex + 1;
 }
-
+*/
 - (void)updateUI
 {
     for (UIButton *cardButton in self.cardButtons) {
@@ -84,6 +87,7 @@
 {
     self.flipCount = 0;
     self.game = nil;
+    self.gameChangerSC.selectedSegmentIndex = self.gameChangerSC.selectedSegmentIndex;
     self.gameChangerSC.hidden = NO;
     self.historySlider.hidden = YES;
     
