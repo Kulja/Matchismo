@@ -7,7 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "PlayingCard.h"
 
-@interface PlayingSetCard : NSObject
+@interface PlayingSetCard : PlayingCard
+
+@property (strong, nonatomic) NSString *shading;
+@property (strong, nonatomic) NSString *color;
+
++ (NSArray *)validShadings;
++ (NSArray *)validColors;
 
 @end

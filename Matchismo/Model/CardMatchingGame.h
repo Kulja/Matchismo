@@ -20,7 +20,7 @@
 - (Card *)cardAtIndex:(NSUInteger)index;
 
 @property (readonly, nonatomic) int score;
-@property (strong, nonatomic) NSMutableArray *flipResultHistory;
-@property (nonatomic) int numberOfMatchesRequired;
+@property (readonly, strong, nonatomic) NSMutableArray *flipResultHistory;
+@property (nonatomic) int numberOfCardsToMatch;
 
 @end
