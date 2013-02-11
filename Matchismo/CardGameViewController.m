@@ -24,6 +24,9 @@
         _game = [[CardMatchingGame alloc] initWithCardCount:[self.cardButtons count]
                                                   usingDeck:[[PlayingCardDeck alloc] init]];
         self.game.numberOfCardsToMatch = 2;
+        self.game.matchBonus = 4;
+        self.game.mismatchPenalty = 2;
+        self.game.flipCost = 1;
     }
     return _game;
 }
@@ -32,9 +35,8 @@
 {
     _cardButtons = cardButtons;
     for (UIButton *cardButton in self.cardButtons) {
-        [cardButton setBackgroundImage:[UIImage imageNamed:@"orangeCard.png"] forState:UIControlStateNormal];
-        [cardButton setBackgroundImage:[UIImage imageNamed:@"whiteCard.png"] forState:UIControlStateSelected];
-        [cardButton setBackgroundImage:[UIImage imageNamed:@"whiteCard.png"] forState:UIControlStateSelected|UIControlStateDisabled];
+        [cardButton setImage:[UIImage new] forState:UIControlStateSelected];
+        [cardButton setImage:[UIImage new] forState:UIControlStateSelected|UIControlStateDisabled];
     }
     [self updateUI];
 }
@@ -48,7 +50,7 @@
 - (void)reportMatchMismatchOrFlippedUpCard:(NSArray *)history
 {
     if ([history count] == 1) {
-        self.infoLabel.text = [NSString stringWithFormat:@"Flipped up %@", [history lastObject]];
+        self.infoLabel.text = [NSString stringWithFormat:@"Flipped up %@", [[history lastObject] lastObject]];
     } else if ([history count] > 1){
         if ([[history objectAtIndex:1] doubleValue] > 0) {
             self.infoLabel.text = [NSString stringWithFormat:@"Matched %@ for %i points", [[history objectAtIndex:0] componentsJoinedByString:@" & "], [[history objectAtIndex:1] intValue]];

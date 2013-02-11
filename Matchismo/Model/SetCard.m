@@ -6,9 +6,32 @@
 //  Copyright (c) 2013 Marko Kuljanski. All rights reserved.
 //
 
-#import "PlayingSetCard.h"
+#import "SetCard.h"
 
 @implementation PlayingSetCard
+
+- (int)match:(NSArray *)otherCards
+{
+    int score = 0;
+    int symbolSum = [[PlayingSetCard validSuits] indexOfObject:self.suit];
+    int numberSum = self.rank;
+    int shadingSum = [[PlayingSetCard validShadings] indexOfObject:self.shading];
+    int colorSum = [[PlayingSetCard validColors] indexOfObject:self.color];
+    
+    if (otherCards.count==2) {
+        
+        for (PlayingSetCard *otherCard in otherCards) {
+            symbolSum += [[PlayingSetCard validSuits] indexOfObject:otherCard.suit];
+            numberSum += otherCard.rank;
+            shadingSum += [[PlayingSetCard validShadings] indexOfObject:otherCard.shading];
+            colorSum += [[PlayingSetCard validColors] indexOfObject:otherCard.color];
+        }
+        
+        if ((symbolSum%3==0)&&(numberSum%3==0)&&(shadingSum%3==0)&&(colorSum%3==0))
+            score = 1;
+    }
+    return score;
+}
 
 - (void)setShading:(NSString *)shading
 {

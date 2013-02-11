@@ -51,10 +51,6 @@
     return (index < [self.cards count]) ? [self.cards objectAtIndex:index] : nil;
 }
 
-#define MATCH_BONUS 4
-#define MISMATCH_PENALTY 2
-#define FLIP_COST 1
-
 - (void)flipCardAtIndex:(NSUInteger)index
 {
     Card *card = [self cardAtIndex:index];
@@ -65,34 +61,34 @@
             NSMutableArray *flippedUpCards = [[NSMutableArray alloc] init];
             [flippedUpCards addObject:card];
             
-            self.score -= FLIP_COST;
+            self.score -= self.flipCost;
             // creating description of a flipped up card
-            [self.flipResultHistory addObject:[NSArray arrayWithObject:card]];
+            [self.flipResultHistory addObject:[NSMutableArray arrayWithObject:flippedUpCards]];
             
             for (Card *otherCard in self.cards) {
                 if (otherCard.isFaceUp && !otherCard.isUnplayable) {
                     [flippedUpCards addObject:otherCard];
                     // continue if number of face up cards is equal to numberOfCardsToMatch
                     if ([flippedUpCards count] == self.numberOfCardsToMatch) {
+                        // removing card from flippedUpCards so that it won't be evaluated with self
+                        [flippedUpCards removeObjectAtIndex:0];
                         int matchScore = [card match:flippedUpCards];
+                        // putting card back in flippedUpCards
+                        [flippedUpCards insertObject:card atIndex:0];
                         if (matchScore) {
                             for (Card *flippedUpCard in flippedUpCards) {
                                 flippedUpCard.unplayable = YES;
                             }
-                            self.score += matchScore * MATCH_BONUS;
-                            // removing last Flipped up card from our flips history
-                            [self.flipResultHistory removeLastObject];
-                            // creating description of a match
-                            [self.flipResultHistory addObject:[NSArray arrayWithObjects:flippedUpCards, @(matchScore * MATCH_BONUS), nil]];
+                            self.score += matchScore * self.matchBonus;
+                            // creating description of a match by adding score 
+                            [[self.flipResultHistory lastObject] addObject:@(matchScore * self.matchBonus)];
                         } else {
                             for (Card *flippedUpCard in flippedUpCards) {
                                 flippedUpCard.faceUp = NO;
                             }
-                            self.score -= MISMATCH_PENALTY;
-                            // removing last Flipped up card from our flips history
-                            [self.flipResultHistory removeLastObject];
-                            // creating description of a mismatch
-                            [self.flipResultHistory addObject:[NSArray arrayWithObjects:flippedUpCards, @(-MISMATCH_PENALTY), nil]];
+                            self.score -= self.mismatchPenalty;
+                            // creating description of a mismatch by adding score
+                            [[self.flipResultHistory lastObject] addObject:@(-self.mismatchPenalty)];
                         }
                         break;
                     }

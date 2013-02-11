@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "CardGameViewController.h"
-#import "PlayingSetCardDeck.h"
+#import "SetCardDeck.h"
 #import "CardMatchingGame.h"
 
 @interface SetGameViewController : CardGameViewController

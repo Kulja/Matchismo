@@ -22,5 +22,8 @@
 @property (readonly, nonatomic) int score;
 @property (readonly, strong, nonatomic) NSMutableArray *flipResultHistory;
 @property (nonatomic) int numberOfCardsToMatch;
+@property (nonatomic) int matchBonus;
+@property (nonatomic) int mismatchPenalty;
+@property (nonatomic) int flipCost;
 
 @end

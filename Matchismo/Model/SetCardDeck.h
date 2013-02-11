@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "Deck.h"
-#import "PlayingSetCard.h"
+#import "SetCard.h"
 
 @interface PlayingSetCardDeck : Deck
 

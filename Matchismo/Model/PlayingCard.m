@@ -33,7 +33,7 @@
 - (int)match:(NSArray *)otherCards
 {
     int score = 0;
-
+    
     for (PlayingCard *cardSuitCheck in otherCards) {
         if ([cardSuitCheck.suit isEqualToString:self.suit]) {
             score += 1;

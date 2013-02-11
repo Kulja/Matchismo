@@ -16,5 +16,4 @@
 @property (weak, nonatomic) IBOutlet UILabel *infoLabel;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 
-
 @end

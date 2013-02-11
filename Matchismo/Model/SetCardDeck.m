@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Marko Kuljanski. All rights reserved.
 //
 
-#import "PlayingSetCardDeck.h"
+#import "SetCardDeck.h"
 
 @implementation PlayingSetCardDeck
 
