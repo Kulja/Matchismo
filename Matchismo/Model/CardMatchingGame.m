@@ -10,8 +10,9 @@
 
 @interface CardMatchingGame()
 @property (readwrite, nonatomic) int score;
-@property (strong, nonatomic) NSMutableArray *cards; // of Card
+@property (readwrite, strong, nonatomic) NSMutableArray *cards; // of Card
 @property (readwrite, strong, nonatomic) NSMutableArray *flipResultHistory;
+@property (strong, nonatomic) Deck *deck;
 @end
 
 @implementation CardMatchingGame
@@ -33,6 +34,7 @@
     self = [super init];
     
     if (self) {
+        self.deck = deck;
         for (int i = 0; i < count; i++) {
             Card *card = deck.drawRandomCard;
             if (card) {
@@ -44,6 +46,33 @@
         }
     }
     return self;
+}
+
+- (NSArray *)getIndexPathsForInsertedCards:(NSUInteger)numberOfCards
+{
+    NSMutableArray *arrayOfIndexPathsOfDeletedCards = [NSMutableArray array];
+    for (int i = 0; i < numberOfCards; i++) {
+        Card *card = self.deck.drawRandomCard;
+        if (card) {
+            [arrayOfIndexPathsOfDeletedCards addObject:[NSIndexPath indexPathForItem:[self.cards count] inSection:0]];
+            [self.cards addObject:card];
+        } else {
+            break;
+        }
+    }
+    
+    return arrayOfIndexPathsOfDeletedCards;
+}
+
+- (NSArray *)getIndexPathsForDeletedCards:(NSArray *)cards
+{
+    NSMutableArray *arrayOfIndexPathsOfDeletedCards = [NSMutableArray array];
+    for (Card *card in cards) {
+        [arrayOfIndexPathsOfDeletedCards addObject:[NSIndexPath indexPathForItem:[self.cards indexOfObject:card] inSection:0]];
+    }
+    [self.cards removeObjectsInArray:cards];
+
+    return arrayOfIndexPathsOfDeletedCards;
 }
 
 - (Card *)cardAtIndex:(NSUInteger)index

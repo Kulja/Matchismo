@@ -8,23 +8,23 @@
 
 #import "SetCard.h"
 
-@implementation PlayingSetCard
+@implementation SetCard
 
 - (int)match:(NSArray *)otherCards
 {
     int score = 0;
-    int symbolSum = [[PlayingSetCard validSuits] indexOfObject:self.suit];
-    int numberSum = self.rank;
-    int shadingSum = [[PlayingSetCard validShadings] indexOfObject:self.shading];
-    int colorSum = [[PlayingSetCard validColors] indexOfObject:self.color];
+    int symbolSum = [[SetCard validSymbol] indexOfObject:self.symbol];
+    int numberSum = self.number;
+    int shadingSum = [[SetCard validShadings] indexOfObject:self.shading];
+    int colorSum = [[SetCard validColors] indexOfObject:self.color];
     
     if (otherCards.count==2) {
         
-        for (PlayingSetCard *otherCard in otherCards) {
-            symbolSum += [[PlayingSetCard validSuits] indexOfObject:otherCard.suit];
-            numberSum += otherCard.rank;
-            shadingSum += [[PlayingSetCard validShadings] indexOfObject:otherCard.shading];
-            colorSum += [[PlayingSetCard validColors] indexOfObject:otherCard.color];
+        for (SetCard *otherCard in otherCards) {
+            symbolSum += [[SetCard validSymbol] indexOfObject:otherCard.symbol];
+            numberSum += otherCard.number;
+            shadingSum += [[SetCard validShadings] indexOfObject:otherCard.shading];
+            colorSum += [[SetCard validColors] indexOfObject:otherCard.color];
         }
         
         if ((symbolSum%3==0)&&(numberSum%3==0)&&(shadingSum%3==0)&&(colorSum%3==0))
@@ -33,37 +33,52 @@
     return score;
 }
 
+- (void)setNumber:(NSUInteger)number
+{
+    if (number <= [SetCard maxNumber]) {
+        _number = number;
+    }
+}
+
+- (void)setSymbol:(NSString *)symbol
+{
+    if ([[SetCard validSymbol] containsObject:symbol]) {
+        _symbol = symbol;
+    }
+}
+
 - (void)setShading:(NSString *)shading
 {
-    if ([[[self class] validShadings] containsObject:shading]) {
+    if ([[SetCard validShadings] containsObject:shading]) {
         _shading = shading;
     }
 }
 
 - (void)setColor:(NSString *)color
 {
-    if ([[[self class] validColors] containsObject:color]) {
+    if ([[SetCard validColors] containsObject:color]) {
         _color = color;
     }
 }
 
 - (NSString *)contents
 {
-    NSString *description = @"";
-    for (NSInteger number = 1; number <= self.rank; number++) {
-        description = [description stringByAppendingString:self.suit];
-    }
-    return description;
+    return [NSString stringWithFormat:@"%d%@ (%@ & %@)", self.number, self.symbol, self.shading, self.color];
 }
 
-+ (NSArray *)validSuits
++ (NSUInteger)maxNumber
 {
-    return [NSArray arrayWithObjects:@"▲", @"■", @"●", nil];
+    return [SetCard numberStrings].count - 1;
 }
 
-+ (NSArray *)rankStrings
++ (NSArray *)numberStrings
 {
     return [NSArray arrayWithObjects:@"?", @"1", @"2", @"3", nil];
+}
+
++ (NSArray *)validSymbol
+{
+    return [NSArray arrayWithObjects:@"diamond", @"squiggle", @"oval", nil];
 }
 
 + (NSArray *)validShadings

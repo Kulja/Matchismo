@@ -7,6 +7,9 @@
 //
 
 #import "PlayingCardGameViewController.h"
+#import "PlayingCardDeck.h"
+#import "PlayingCard.h"
+#import "PlayingCardCollectionViewCell.h"
 
 @interface PlayingCardGameViewController ()
 
@@ -14,25 +17,83 @@
 
 @implementation PlayingCardGameViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (Deck *)createDeck
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
+    return [[PlayingCardDeck alloc] init];
+}
+
+- (NSUInteger) startingCardCound
+{
+    return 22;
+}
+
+- (NSUInteger) numberOfCardsToMatch
+{
+    return 2;
+}
+
+- (NSUInteger) matchBonus
+{
+    return 4;
+}
+
+- (NSUInteger) mismatchPenalty
+{
+    return 2;
+}
+
+- (NSUInteger) flipCost
+{
+    return 1;
+}
+
+- (void)updateCell:(UICollectionViewCell *)cell usingCard:(Card *)card
+{
+    if ([cell isKindOfClass:[PlayingCardCollectionViewCell class]]) {
+        PlayingCardView *playingCardView = ((PlayingCardCollectionViewCell *)cell).playingCardView;
+        if ([card isKindOfClass:[PlayingCard class]]) {
+            PlayingCard *playingCard = (PlayingCard *)card;
+            playingCardView.rank = playingCard.rank;
+            playingCardView.suit = playingCard.suit;
+            playingCardView.faceUp = playingCard.isFaceUp;
+            playingCardView.alpha = playingCard.isUnplayable ? 0.3 : 1.0;
+        }
     }
-    return self;
 }
 
-- (void)viewDidLoad
+- (void)updateLastFlipStatusView:(UIView *)view usingLastFlipResult:(NSArray *)flipResult andInfoLabel:(UILabel *)infoLabel
 {
-    [super viewDidLoad];
-	// Do any additional setup after loading the view.
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    CGFloat xOffset = 0;
+    
+    for (UIView *subView in [view subviews]) {
+        [subView removeFromSuperview];
+    }
+    
+    for (Card *card in [flipResult objectAtIndex:0]) {
+        if ([card isKindOfClass:[PlayingCard class]]) {
+            PlayingCardView *playingCardView = [[PlayingCardView alloc] initWithFrame:CGRectMake(xOffset, 0, 50, view.bounds.size.height)];
+            playingCardView.opaque = NO;
+            [playingCardView setBackgroundColor:[UIColor clearColor]];
+            PlayingCard *playingCard = (PlayingCard *)card;
+            playingCardView.rank = playingCard.rank;
+            playingCardView.suit = playingCard.suit;
+            playingCardView.faceUp = YES;
+            [view addSubview:playingCardView];
+            xOffset += playingCardView.bounds.size.width + 10;
+        }
+    }
+    
+    if ([flipResult count] == 1) {
+        infoLabel.text = @"Flipped up";
+    } else if ([flipResult count] > 1){
+        if ([[flipResult objectAtIndex:1] doubleValue] > 0) {
+            infoLabel.text = [NSString stringWithFormat:@"Matched! (%i points)", [[flipResult objectAtIndex:1] intValue]];
+        } else {
+            infoLabel.text = [NSString stringWithFormat:@"No match! (%i points)", [[flipResult objectAtIndex:1] intValue]];
+        }
+    } else {
+        infoLabel.text = @" ";
+    }
 }
 
 @end

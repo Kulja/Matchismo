@@ -7,84 +7,100 @@
 //
 
 #import "SetGameViewController.h"
-
-@interface SetGameViewController ()
-@property (strong, nonatomic) CardMatchingGame *game;
-@end
+#import "SetCardDeck.h"
+#import "SetCard.h"
+#import "SetCardCollectionViewCell.h"
 
 @implementation SetGameViewController
 
-- (CardMatchingGame *)game
+- (Deck *)createDeck
 {
-    if (!_game) {
-        _game = [[CardMatchingGame alloc] initWithCardCount:[super.cardButtons count]
-                                                  usingDeck:[[PlayingSetCardDeck alloc] init]];
-        self.game.numberOfCardsToMatch = 3;
-        self.game.matchBonus = 16;
-        self.game.mismatchPenalty = 2;
-        self.game.flipCost = 0;
-    }
-    return _game;
+    return [[SetCardDeck alloc] init];
 }
 
-- (NSAttributedString *)getAttributedstringForACard:(PlayingSetCard *)playingSetCard
+- (NSUInteger)startingCardCound
 {
-    NSDictionary *cardAttributes = @{};
-    if ([playingSetCard.shading isEqualToString:@"open"]) {
-        cardAttributes = @{ NSForegroundColorAttributeName : [UIColor clearColor],
-                            NSStrokeWidthAttributeName : @-10,
-                            NSStrokeColorAttributeName : [UIColor valueForKey:playingSetCard.color] };
-    } else if ([playingSetCard.shading isEqualToString:@"striped"]) {
-        cardAttributes = @{ NSForegroundColorAttributeName : [[UIColor valueForKey:playingSetCard.color] colorWithAlphaComponent:0.3],
-                            NSStrokeWidthAttributeName : @-10,
-                            NSStrokeColorAttributeName : [UIColor valueForKey:playingSetCard.color]};
-    } else if ([playingSetCard.shading isEqualToString:@"solid"]) {
-        cardAttributes = @{ NSForegroundColorAttributeName : [UIColor valueForKey:playingSetCard.color] };
-    }
-    return [[NSAttributedString alloc] initWithString:playingSetCard.contents attributes:cardAttributes];
+    return 12;
 }
 
-- (void)reportMatchMismatchOrFlippedUpCard:(NSArray *)history
+- (NSUInteger)numberOfCardsToMatch
 {
-    NSMutableAttributedString *mutableAttributedString = [[NSMutableAttributedString alloc] init];
-    NSMutableAttributedString *space = [[NSMutableAttributedString alloc] initWithString:@" "];
+    return 3;
+}
 
-    for (PlayingSetCard *playingSetCard in [history objectAtIndex:0]) {
-        [mutableAttributedString appendAttributedString:[self getAttributedstringForACard:playingSetCard]];
-        [mutableAttributedString appendAttributedString:space];
+- (NSUInteger) matchBonus
+{
+    return 16;
+}
+
+- (NSUInteger)mismatchPenalty
+{
+    return 2;
+}
+
+- (NSUInteger)flipCost
+{
+    return 0;
+}
+
+- (NSUInteger)numberOfCardsToGetOnHitMeClick
+{
+    return 3;
+}
+
+- (void)updateCell:(UICollectionViewCell *)cell usingCard:(Card *)card
+{
+    if ([cell isKindOfClass:[SetCardCollectionViewCell class]]) {
+        SetCardView *setCardView = ((SetCardCollectionViewCell *)cell).setCardView;
+        if ([card isKindOfClass:[SetCard class]]) {
+            SetCard *setCard = (SetCard *)card;
+            setCardView.number = setCard.number;
+            setCardView.symbol = setCard.symbol;
+            setCardView.shading = setCard.shading;
+            setCardView.color = setCard.color;
+            setCardView.faceUp = setCard.isFaceUp;
+            setCardView.alpha = setCard.isUnplayable ? 0.3 : 1.0;
+        }
+    }
+}
+
+- (void)updateLastFlipStatusView:(UIView *)view usingLastFlipResult:(NSArray *)flipResult andInfoLabel:(UILabel *)infoLabel
+{
+    CGFloat xOffset = 0;
+    
+    for (UIView *subView in [view subviews]) {
+        [subView removeFromSuperview];
     }
     
-    if ([history count] == 1) {
-        [mutableAttributedString appendAttributedString:[[NSMutableAttributedString alloc] initWithString:@"selected!"]];
-    } else if ([history count] == 2){
-        if ([[history objectAtIndex:1] doubleValue] > 0) {
-            [mutableAttributedString appendAttributedString:[[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"match! (%i points)", [[history objectAtIndex:1] intValue]]]];
+    for (Card *card in [flipResult objectAtIndex:0]) {
+        if ([card isKindOfClass:[SetCard class]]) {
+            SetCardView *setCardView = [[SetCardView alloc] initWithFrame:CGRectMake(xOffset, 0, 50, view.bounds.size.height)];
+            setCardView.opaque = NO;
+            [setCardView setBackgroundColor:[UIColor clearColor]];
+            SetCard *setCard = (SetCard *)card;
+            setCardView.number = setCard.number;
+            setCardView.symbol = setCard.symbol;
+            setCardView.shading = setCard.shading;
+            setCardView.color = setCard.color;
+            setCardView.faceUp = NO;
+            [view addSubview:setCardView];
+            xOffset += setCardView.bounds.size.width + 10;
+        }
+    }
+    
+    if ([flipResult count] == 1) {
+        infoLabel.text = @"Flipped up";
+    } else if ([flipResult count] > 1){
+        if ([[flipResult objectAtIndex:1] doubleValue] > 0) {
+            infoLabel.text = [NSString stringWithFormat:@"Matched! (%i points)", [[flipResult objectAtIndex:1] intValue]];
+            // delete cards
+            [super deleteCards:[flipResult objectAtIndex:0]];
         } else {
-            [mutableAttributedString appendAttributedString:[[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@" don't match (%i points)", [[history objectAtIndex:1] intValue]]]];
+            infoLabel.text = [NSString stringWithFormat:@"No match! (%i points)", [[flipResult objectAtIndex:1] intValue]];
         }
     } else {
-        self.infoLabel.attributedText = [[NSMutableAttributedString alloc]initWithString:@""];
+        infoLabel.text = @" ";
     }
-    
-    [mutableAttributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:14] range:NSMakeRange(0, mutableAttributedString.length)];
-    NSMutableParagraphStyle *paragraph = [[NSMutableParagraphStyle alloc] init];
-    paragraph.alignment = NSTextAlignmentCenter;
-    [mutableAttributedString addAttribute:NSParagraphStyleAttributeName value:paragraph range:NSMakeRange(0, mutableAttributedString.length)];
-    self.infoLabel.attributedText = mutableAttributedString;
-}
-
-- (void)updateUI
-{
-    for (UIButton *cardButton in self.cardButtons) {
-        PlayingSetCard *card = (PlayingSetCard *)[self.game cardAtIndex:[self.cardButtons indexOfObject:cardButton]];
-        cardButton.selected = card.faceUp;
-        cardButton.backgroundColor = (card.faceUp ? [UIColor lightGrayColor] : [UIColor whiteColor]);
-        cardButton.enabled = !card.isUnplayable;
-        cardButton.alpha = (card.isUnplayable ? 0.3 : 1.0);
-        [cardButton setAttributedTitle:[self getAttributedstringForACard:card] forState:UIControlStateNormal];
-    }
-    self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d", self.game.score];
-    [self reportMatchMismatchOrFlippedUpCard:[self.game.flipResultHistory lastObject]];
 }
 
 @end

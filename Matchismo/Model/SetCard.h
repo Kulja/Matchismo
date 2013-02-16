@@ -7,13 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "PlayingCard.h"
+#import "Card.h"
 
-@interface PlayingSetCard : PlayingCard
+@interface SetCard : Card
 
+@property (nonatomic) NSUInteger number;
+@property (strong, nonatomic) NSString *symbol;
 @property (strong, nonatomic) NSString *shading;
 @property (strong, nonatomic) NSString *color;
 
++ (NSUInteger)maxNumber;
++ (NSArray *)numberStrings;
++ (NSArray *)validSymbol;
 + (NSArray *)validShadings;
 + (NSArray *)validColors;
 

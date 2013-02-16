@@ -16,9 +16,11 @@
 - (id)initWithCardCount:(NSUInteger)count usingDeck:(Deck *)deck;
 
 - (void)flipCardAtIndex:(NSUInteger)index;
-
 - (Card *)cardAtIndex:(NSUInteger)index;
+- (NSArray *)getIndexPathsForDeletedCards:(NSArray *)cards;
+- (NSArray *)getIndexPathsForInsertedCards:(NSUInteger)numberOfCards;
 
+@property (readonly, strong, nonatomic) NSMutableArray *cards; // of Card
 @property (readonly, nonatomic) int score;
 @property (readonly, strong, nonatomic) NSMutableArray *flipResultHistory;
 @property (nonatomic) int numberOfCardsToMatch;

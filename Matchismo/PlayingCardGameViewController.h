@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CardGameViewController.h"
 
-@interface PlayingCardGameViewController : UIViewController
+@interface PlayingCardGameViewController : CardGameViewController
 
 @end

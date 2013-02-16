@@ -7,13 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "PlayingCardDeck.h"
+#import "Deck.h"
 #import "CardMatchingGame.h"
 
 @interface CardGameViewController : UIViewController
 
-@property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
-@property (weak, nonatomic) IBOutlet UILabel *infoLabel;
-@property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
+- (Deck *)createDeck; // abstract
+@property (nonatomic) NSUInteger startingCardCound; // abstract
+@property (nonatomic) NSUInteger numberOfCardsToMatch; // abstract
+@property (nonatomic) NSUInteger matchBonus; // abstract
+@property (nonatomic) NSUInteger mismatchPenalty; // abstract
+@property (nonatomic) NSUInteger flipCost; // abstract
+- (void)updateCell:(UICollectionViewCell *)cell usingCard:(Card *)card; // abstract
 
+- (void)updateLastFlipStatusView:(UIView *)view usingLastFlipResult:(NSArray *)flipResult andInfoLabel:(UILabel *)infoLabel; // abstract
+@property (nonatomic) NSUInteger numberOfCardsToGetOnHitMeClick; // abstract
+
+- (void)deleteCards:(NSArray *)cards;
 @end

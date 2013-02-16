@@ -10,6 +10,6 @@
 #import "Deck.h"
 #import "SetCard.h"
 
-@interface PlayingSetCardDeck : Deck
+@interface SetCardDeck : Deck
 
 @end
