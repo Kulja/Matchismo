@@ -84,8 +84,12 @@
     }
     
     if ([flipResult count] == 1) {
-        infoLabel.text = @"Flipped up";
-    } else if ([flipResult count] > 1){
+        if ([[flipResult objectAtIndex:0] count] == 0) {
+            infoLabel.text = @" ";
+        } else {
+            infoLabel.text = @"Flipped up";
+        }
+    } else if ([flipResult count] == 2){
         if ([[flipResult objectAtIndex:1] doubleValue] > 0) {
             infoLabel.text = [NSString stringWithFormat:@"Matched! (%i points)", [[flipResult objectAtIndex:1] intValue]];
         } else {

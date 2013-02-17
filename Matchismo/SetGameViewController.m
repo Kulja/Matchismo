@@ -54,10 +54,7 @@
         SetCardView *setCardView = ((SetCardCollectionViewCell *)cell).setCardView;
         if ([card isKindOfClass:[SetCard class]]) {
             SetCard *setCard = (SetCard *)card;
-            setCardView.number = setCard.number;
-            setCardView.symbol = setCard.symbol;
-            setCardView.shading = setCard.shading;
-            setCardView.color = setCard.color;
+            [setCardView drawSetCardWithAttributeNumber:setCard.number symbol:setCard.symbol shading:setCard.shading color:setCard.color];
             setCardView.faceUp = setCard.isFaceUp;
             setCardView.alpha = setCard.isUnplayable ? 0.3 : 1.0;
         }
@@ -78,19 +75,19 @@
             setCardView.opaque = NO;
             [setCardView setBackgroundColor:[UIColor clearColor]];
             SetCard *setCard = (SetCard *)card;
-            setCardView.number = setCard.number;
-            setCardView.symbol = setCard.symbol;
-            setCardView.shading = setCard.shading;
-            setCardView.color = setCard.color;
-            setCardView.faceUp = NO;
+            [setCardView drawSetCardWithAttributeNumber:setCard.number symbol:setCard.symbol shading:setCard.shading color:setCard.color];
             [view addSubview:setCardView];
             xOffset += setCardView.bounds.size.width + 10;
         }
     }
     
     if ([flipResult count] == 1) {
-        infoLabel.text = @"Flipped up";
-    } else if ([flipResult count] > 1){
+        if ([[flipResult objectAtIndex:0] count] == 0) {
+            infoLabel.text = @" ";
+        } else {
+            infoLabel.text = @"Flipped up";
+        }
+    } else if ([flipResult count] == 2){
         if ([[flipResult objectAtIndex:1] doubleValue] > 0) {
             infoLabel.text = [NSString stringWithFormat:@"Matched! (%i points)", [[flipResult objectAtIndex:1] intValue]];
             // delete cards

@@ -123,6 +123,17 @@
                     }
                 }
             }
+        } else {
+            // makes new flipResultHistory without the card that is clicked to be flipped down
+            NSMutableArray *flippedUpCards = [[NSMutableArray alloc] init];
+            for (Card *cardInFlipResultHistory in [[self.flipResultHistory lastObject] objectAtIndex:0]) {
+                if (!(cardInFlipResultHistory == card)) {
+                    if (cardInFlipResultHistory.faceUp) {
+                        [flippedUpCards addObject:cardInFlipResultHistory];
+                    }
+                }
+            }
+            [self.flipResultHistory addObject:[NSMutableArray arrayWithObject:flippedUpCards]];
         }
         card.faceUp = !card.isFaceUp;
     }

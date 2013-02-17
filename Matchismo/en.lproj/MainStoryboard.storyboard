@@ -143,6 +143,11 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="s2N-0L-VP3">
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                             </view>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x1N-mB-xm9">
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Score: 0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vP9-OH-oaX">
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -212,11 +217,6 @@
                                     <action selector="plusButtonClicked" destination="dOD-Uc-BwE" eventType="touchUpInside" id="k1n-iq-aNT"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x1N-mB-xm9">
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -256,6 +256,58 @@
             <point key="canvasLocation" x="-379" y="203"/>
         </scene>
     </scenes>
+    <classes>
+        <class className="CardGameViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CardGameViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="flipCard:" candidateClass="UITapGestureRecognizer"/>
+                <relationship kind="action" name="startNewGame:" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="cardCollectionView" candidateClass="UICollectionView"/>
+                <relationship kind="outlet" name="infoLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="lastFlipStatusView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="scoreLabel" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="NSLayoutConstraint" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
+        </class>
+        <class className="PlayingCardCollectionViewCell" superclassName="UICollectionViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PlayingCardCollectionViewCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="playingCardView" candidateClass="PlayingCardView"/>
+            </relationships>
+        </class>
+        <class className="PlayingCardGameViewController" superclassName="CardGameViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PlayingCardGameViewController.h"/>
+        </class>
+        <class className="PlayingCardView" superclassName="UIView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PlayingCardView.h"/>
+        </class>
+        <class className="SetCardCollectionViewCell" superclassName="UICollectionViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SetCardCollectionViewCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="setCardView" candidateClass="SetCardView"/>
+            </relationships>
+        </class>
+        <class className="SetCardView" superclassName="UIView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SetCardView.h"/>
+        </class>
+        <class className="SetGameViewController" superclassName="CardGameViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SetGameViewController.h"/>
+        </class>
+        <class className="UICollectionReusableView" superclassName="UIView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionReusableView.h"/>
+        </class>
+        <class className="UICollectionViewCell" superclassName="UICollectionReusableView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewCell.h"/>
+        </class>
+        <class className="UICollectionViewFlowLayout" superclassName="UICollectionViewLayout">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewFlowLayout.h"/>
+        </class>
+        <class className="UICollectionViewLayout" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewLayout.h"/>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

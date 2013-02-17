@@ -8,29 +8,22 @@
 
 #import "SetCardView.h"
 
+@interface SetCardView()
+@property (nonatomic) NSUInteger number;
+@property (strong, nonatomic) NSString *symbol;
+@property (strong, nonatomic) NSString *shading;
+@property (strong, nonatomic) NSString *color;
+@end
+
 @implementation SetCardView
 
-- (void)setNumber:(NSUInteger)number
+- (void)drawSetCardWithAttributeNumber:(NSUInteger)number symbol:(NSString *)symbol shading:(NSString *)shading color:(NSString *)color
 {
-    _number = number;
-    [self setNeedsDisplay];
-}
-
-- (void)setSymbol:(NSString *)symbol
-{
-    _symbol = symbol;
-    [self setNeedsDisplay];
-}
-
-- (void)setShading:(NSString *)shading
-{
-    _shading = shading;
-    [self setNeedsDisplay];
-}
-
-- (void)setColor:(NSString *)color
-{
-    _color = color;
+    self.number = number;
+    self.symbol = symbol;
+    self.shading = shading;
+    self.color = color;
+    
     [self setNeedsDisplay];
 }
 
@@ -61,7 +54,10 @@
     [self drawCards];
 }
 
+#define SYMBOL_SCALE_X 2
+#define SYMBOL_SCALE_Y 4.5
 #define SIZE_OF_OVAL_CURVE 10
+#define DIAMOND_ARM_SCALE 0.8
 #define Y_OFFSET_FOR_NUMBER_2 2.7
 #define Y_OFFSET_FOR_NUMBER_3 1.7
 
@@ -79,13 +75,13 @@
 - (void)drawSquiggle
 {
     CGPoint middle = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
-    CGPoint start = CGPointMake(middle.x + (middle.x / 2), middle.y - (middle.y / 4.5));
+    CGPoint start = CGPointMake(middle.x + (middle.x / SYMBOL_SCALE_X), middle.y - (middle.y / SYMBOL_SCALE_Y));
     UIBezierPath *path = [[UIBezierPath alloc] init];
     [path moveToPoint:start];
-    [path addQuadCurveToPoint:CGPointMake(start.x, middle.y + (middle.y / 4.5)) controlPoint:CGPointMake(start.x + SIZE_OF_OVAL_CURVE, middle.y)];
-    [path addCurveToPoint:CGPointMake(middle.x - (middle.x / 2), middle.y + (middle.y / 4.5)) controlPoint1:CGPointMake(middle.x + (middle.x / 10), middle.y + (middle.y / 2.5)) controlPoint2:CGPointMake(middle.x - (middle.x / 10), middle.y + (middle.y / 30))];
-    [path addQuadCurveToPoint:CGPointMake(middle.x - (middle.x / 2), start.y) controlPoint:CGPointMake(middle.x - (middle.x / 2) - SIZE_OF_OVAL_CURVE, middle.y)];
-    [path addCurveToPoint:CGPointMake(start.x, start.y) controlPoint1:CGPointMake(middle.x - (middle.x / 10), middle.y - (middle.y / 2.5)) controlPoint2:CGPointMake(middle.x + (middle.x / 10), middle.y - (middle.y / 30))];
+    [path addQuadCurveToPoint:CGPointMake(start.x, middle.y + (middle.y / SYMBOL_SCALE_Y)) controlPoint:CGPointMake(start.x + SIZE_OF_OVAL_CURVE, middle.y)];
+    [path addCurveToPoint:CGPointMake(middle.x - (middle.x / SYMBOL_SCALE_X), middle.y + (middle.y / SYMBOL_SCALE_Y)) controlPoint1:CGPointMake(middle.x, middle.y + (middle.y / SYMBOL_SCALE_Y) + (middle.y / SYMBOL_SCALE_Y)) controlPoint2:CGPointMake(middle.x, middle.y)];
+    [path addQuadCurveToPoint:CGPointMake(middle.x - (middle.x / SYMBOL_SCALE_X), start.y) controlPoint:CGPointMake(middle.x - (middle.x / SYMBOL_SCALE_X) - SIZE_OF_OVAL_CURVE, middle.y)];
+    [path addCurveToPoint:CGPointMake(start.x, start.y) controlPoint1:CGPointMake(middle.x, middle.y - (middle.y / SYMBOL_SCALE_Y) - (middle.y / SYMBOL_SCALE_Y)) controlPoint2:CGPointMake(middle.x, middle.y)];
     
     [self drawAttributesFor:path];
 }
@@ -93,12 +89,12 @@
 - (void)drawOval
 {
     CGPoint middle = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
-    CGPoint start = CGPointMake(middle.x + (middle.x / 2), middle.y - (middle.y / 4.5));
+    CGPoint start = CGPointMake(middle.x + (middle.x / SYMBOL_SCALE_X), middle.y - (middle.y / SYMBOL_SCALE_Y));
     UIBezierPath *path = [[UIBezierPath alloc] init];
     [path moveToPoint:start];
-    [path addQuadCurveToPoint:CGPointMake(start.x, middle.y + (middle.y / 4.5)) controlPoint:CGPointMake(start.x + SIZE_OF_OVAL_CURVE, middle.y)];
-    [path addLineToPoint:CGPointMake(middle.x - (middle.x / 2), middle.y + (middle.y / 4.5))];
-    [path addQuadCurveToPoint:CGPointMake(middle.x - (middle.x / 2), start.y) controlPoint:CGPointMake(middle.x - (middle.x / 2) - SIZE_OF_OVAL_CURVE, middle.y)];
+    [path addQuadCurveToPoint:CGPointMake(start.x, middle.y + (middle.y / SYMBOL_SCALE_Y)) controlPoint:CGPointMake(start.x + SIZE_OF_OVAL_CURVE, middle.y)];
+    [path addLineToPoint:CGPointMake(middle.x - (middle.x / SYMBOL_SCALE_X), middle.y + (middle.y / SYMBOL_SCALE_Y))];
+    [path addQuadCurveToPoint:CGPointMake(middle.x - (middle.x / SYMBOL_SCALE_X), start.y) controlPoint:CGPointMake(middle.x - (middle.x / SYMBOL_SCALE_X) - SIZE_OF_OVAL_CURVE, middle.y)];
     [path closePath];
     
     [self drawAttributesFor:path];
@@ -107,12 +103,12 @@
 - (void)drawDiamond
 {
     CGPoint middle = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
-    CGPoint start = CGPointMake(middle.x, middle.y - (middle.y / 4.5));
+    CGPoint start = CGPointMake(middle.x, middle.y - (middle.y / SYMBOL_SCALE_Y));
     UIBezierPath *path = [[UIBezierPath alloc] init];
     [path moveToPoint:start];
-    [path addLineToPoint:CGPointMake(middle.x + (middle.x / 1.5), middle.y)];
-    [path addLineToPoint:CGPointMake(middle.x, middle.y + (middle.y / 4.5))];
-    [path addLineToPoint:CGPointMake(middle.x - (middle.x / 1.5), middle.y)];
+    [path addLineToPoint:CGPointMake(middle.x + (middle.x / (SYMBOL_SCALE_X * DIAMOND_ARM_SCALE)), middle.y)];
+    [path addLineToPoint:CGPointMake(middle.x, middle.y + (middle.y / SYMBOL_SCALE_Y))];
+    [path addLineToPoint:CGPointMake(middle.x - (middle.x / (SYMBOL_SCALE_X * DIAMOND_ARM_SCALE)), middle.y)];
     [path closePath];
     
     [self drawAttributesFor:path];
