@@ -54,7 +54,10 @@
         SetCardView *setCardView = ((SetCardCollectionViewCell *)cell).setCardView;
         if ([card isKindOfClass:[SetCard class]]) {
             SetCard *setCard = (SetCard *)card;
-            [setCardView drawSetCardWithAttributeNumber:setCard.number symbol:setCard.symbol shading:setCard.shading color:setCard.color];
+            setCardView.number = setCard.number;
+            setCardView.symbol = setCard.symbol;
+            setCardView.shading = setCard.shading;
+            setCardView.color = setCard.color;
             setCardView.faceUp = setCard.isFaceUp;
             setCardView.alpha = setCard.isUnplayable ? 0.3 : 1.0;
         }
@@ -75,7 +78,10 @@
             setCardView.opaque = NO;
             [setCardView setBackgroundColor:[UIColor clearColor]];
             SetCard *setCard = (SetCard *)card;
-            [setCardView drawSetCardWithAttributeNumber:setCard.number symbol:setCard.symbol shading:setCard.shading color:setCard.color];
+            setCardView.number = setCard.number;
+            setCardView.symbol = setCard.symbol;
+            setCardView.shading = setCard.shading;
+            setCardView.color = setCard.color;
             [view addSubview:setCardView];
             xOffset += setCardView.bounds.size.width + 10;
         }

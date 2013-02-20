@@ -9,21 +9,32 @@
 #import "SetCardView.h"
 
 @interface SetCardView()
-@property (nonatomic) NSUInteger number;
-@property (strong, nonatomic) NSString *symbol;
-@property (strong, nonatomic) NSString *shading;
-@property (strong, nonatomic) NSString *color;
+
 @end
 
 @implementation SetCardView
 
-- (void)drawSetCardWithAttributeNumber:(NSUInteger)number symbol:(NSString *)symbol shading:(NSString *)shading color:(NSString *)color
+- (void)setNumber:(NSUInteger)number
 {
-    self.number = number;
-    self.symbol = symbol;
-    self.shading = shading;
-    self.color = color;
-    
+    _number = number;
+    [self setNeedsDisplay];
+}
+
+- (void)setSymbol:(NSString *)symbol
+{
+    _symbol = symbol;
+    [self setNeedsDisplay];
+}
+
+- (void)setShading:(NSString *)shading
+{
+    _shading = shading;
+    [self setNeedsDisplay];
+}
+
+- (void)setColor:(NSString *)color
+{
+    _color = color;
     [self setNeedsDisplay];
 }
 
